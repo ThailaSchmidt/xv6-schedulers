@@ -1,0 +1,36 @@
+O arquivo de teste se chama testP.c, lá está o código de teste, o scheduler() está em proc.c.
+para testar o código usar os comandos no xv6-riscv:
+make qemu
+testP
+ele vai retornar algo como:
+
+start pid=5 (classe=1)
+start pid=4 (classe=0)
+start pid=6 (classe=2)
+start pid=7 (classe=3)
+stop pid=4 (classe=0)
+child pid = 4 finished!
+
+stop pid=5 (classe=1)
+child pid = 5 finished!
+
+stop pid=6 (classe=2)
+child pid = 6 finished!
+
+stop pid=7 (classe=3)
+child pid = 7 finished!
+
+
+onde "start" quer dizer que iniciou o processo criado em "forkprio" e ao lado informa a classe que o processo foi atribuido.
+depois ele vai finalizando os processos pela ordem da loteria, muitas vezes a ordem pode ficar 0 1 2 3, mas ao testar algumas vezes ela altera.
+os prints podem ficar um pouco embaralhados as vezes também...
+
+OBS:se executar 'make clean', deve-se adiciconar os comandos:
+
+.global forkprio
+forkprio:
+  li a7, SYS_forkprio
+  ecall
+  ret
+
+na pasta chamada usys.S
